@@ -1,26 +1,21 @@
-package com.example.myapplication.data.data_module
+package com.example.myapplication.di
 
 import com.example.myapplication.data.data_source.ApiService
 import com.example.myapplication.data.repository.ProductRepository
-import com.example.myapplication.domain.usecases.GetProductsUseCase
-import com.example.myapplication.presentation.view_model.ProductViewModel
-import okhttp3.Interceptor
+import com.example.myapplication.domain.repository.ApiRepository
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.BuildConfig
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.scope.get
+
 import org.koin.dsl.module
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
 
-    single { ProductRepository(get()) }
-    single { GetProductsUseCase(get()) }
-    viewModel { ProductViewModel(get()) }
+    single <ApiRepository> { ProductRepository(get()) }
+
 
     single {
         provideRetrofit(okHttpClient = get())
@@ -41,7 +36,7 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-fun provideApiService(retrofit: Retrofit): ApiService {
+fun provideApiService(retrofit: Retrofit): ApiService{
     return retrofit.create(ApiService::class.java)
 }
 
